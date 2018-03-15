@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Today\'s Nepali Date</string>
+    <string name="appwidget_text">Today\'s Nepali Date</string>
+    <string name="add_widget">Let you know current Nepali date.</string>
+
+
+    <string name="app_description">Author: Ganesh Shrestha\nganesh-shrestha@hotmail.com</string>
+
+    <array name="colorslist">
+        <item>BLACK</item>
+        <item>DKGRAY</item>
+        <item>GRAY</item>
+        <item>LTGRAY</item>
+        <item>WHITE</item>
+        <item>RED</item>
+        <item>GREEN</item>
+        <item>BLUE</item>
+        <item>YELLOW</item>
+        <item>CYAN</item>
+        <item>MAGENTA</item>
+        <item>TRANSPARENT</item>
+    </array>
+</resources>
