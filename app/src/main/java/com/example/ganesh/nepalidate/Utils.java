@@ -14,6 +14,20 @@ import java.util.Map;
 
 public class Utils {
     static String returnValue = "आजको नेपाली डेट";
+    static String[] englishmonths = new String[]{
+            "January",
+            "Feburary",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+    };
     static String[] nepalimonths = new String[]{
             "बैशाख",
             "जेष्ठ",
@@ -55,6 +69,17 @@ public class Utils {
             put("Saturday", "शनिवार");
         }
     };
+    static List<String> englishDaysList = new ArrayList<String>() {
+        {
+            add("Sunday");
+            add("Monday");
+            add("Tuesday");
+            add("Wednesday");
+            add("Thursday");
+            add("Friday");
+            add("Saturday");
+        }
+    };
 
     static String[] englishDays = new String[]{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
@@ -63,6 +88,12 @@ public class Utils {
         return GetNepaliDate(currentdate.get(Calendar.YEAR), currentdate.get(Calendar.MONTH) + 1, currentdate.get(Calendar.DAY_OF_MONTH));
     }
 
+    public static String GetEnglishDate(int year, int month, int day) {
+        String convertedString = "";
+        NepaliDateGenerator.NepDate date = new NepaliDateGenerator().ConvertNepaliDate(year, month + 1, day);
+
+        return convertedString = String.format("%d, %s %d %s", date.Year, englishmonths[date.Month - 1], date.Day, englishDaysList.get(date.WeekDay - 1));
+    }
 
     public static String GetNepaliDate(int year, int month, int day) {
         String nepdate = "";

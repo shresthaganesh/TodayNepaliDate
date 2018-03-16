@@ -32,7 +32,12 @@ public class NewAppWidget extends AppWidgetProvider {
 
         views.setTextViewText(R.id.appwidget_text, widgetText);
         views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_convertbutton, pendingIntent);
+        views.setOnClickPendingIntent(R.id.widget_settingstbutton, pendingIntent);
 
+//        views.setTextViewText(R.id.widget_convertbutton, "Convert Date");
+//        views.setTextViewText(R.id.widget_settingstbutton, "Settings");
+        ;
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -62,12 +67,10 @@ public class NewAppWidget extends AppWidgetProvider {
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
 
-            //views.setTextColor(R.id.appwidget_text, Color.RED);
-
-
-            PendingIntent intent1 = PendingIntent.getActivity(context,0,new Intent(context,MainActivity.class),0);
-            views.setOnClickPendingIntent(R.id.appwidget_text,intent1);
-
+            PendingIntent intent1 = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
+            views.setOnClickPendingIntent(R.id.appwidget_text, intent1);
+            views.setOnClickPendingIntent(R.id.widget_convertbutton, intent1);
+            views.setOnClickPendingIntent(R.id.widget_settingstbutton, intent1);
             ComponentName name = new ComponentName(context, NewAppWidget.class);
             int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(name);
 

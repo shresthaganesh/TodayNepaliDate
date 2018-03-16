@@ -20,4 +20,37 @@
         <item>MAGENTA</item>
         <item>TRANSPARENT</item>
     </array>
+    <array name="conversionType">
+        <item>EngToNep</item>
+        <item>NepToEng</item>
+    </array>
+    <array name="englishmonthlist">
+        <item>Jan</item>
+        <item>Feb</item>
+        <item>Mar</item>
+        <item>Apr</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>Sept</item>
+        <item>Oct</item>
+        <item>Nov</item>
+        <item>Dec</item>
+    </array>
+
+    <array name="nepalimonthslist">
+        <item>बैशाख</item>
+        <item>जेठ</item>
+        <item>असार</item>
+        <item>श्रावण</item>
+        <item>भदौ</item>
+        <item>आश्विन</item>
+        <item>कार्तिक</item>
+        <item>मंसिर</item>
+        <item>पुष</item>
+        <item>माघ</item>
+        <item>फाल्गुन</item>
+        <item>चैत्र</item>
+    </array>
 </resources>

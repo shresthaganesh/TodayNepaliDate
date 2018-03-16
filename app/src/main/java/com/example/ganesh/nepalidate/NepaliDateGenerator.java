@@ -106,6 +106,112 @@ public class NepaliDateGenerator {
 
     }
 
+    public NepDate ConvertNepaliDate(int yy, int mm, int dd) {
+
+
+        if (bs == null) InitializeData();
+        int def_eyy = 1943;
+        int def_emm = 4;
+        int def_edd = 14 - 1;        // init english date.
+        int def_nyy = 2000;
+        int def_nmm = 1;
+        int def_ndd = 1;        // equivalent nepali date.
+        int total_eDays = 0;
+        int total_nDays = 0;
+        int a = 0;
+        int day = 4 - 1;        // initializations...
+        int m = 0;
+        int y = 0;
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        int numDay = 0;
+
+        int[] month = new int[]{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        int[] lmonth = new int[]{0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+        if (IsRangeNep(yy, mm, dd) == false) {
+            return new NepDate();
+
+        } else {
+
+            // count total days in-terms of year
+            for (i = 0; i < (yy - def_nyy); i++) {
+                for (j = 1; j <= 12; j++) {
+                    total_nDays += bs.get(k)[j];
+                }
+                k++;
+            }
+
+            // count total days in-terms of month
+            for (j = 1; j < mm; j++) {
+                total_nDays += bs.get(k)[j];
+            }
+
+            // count total days in-terms of dat
+            total_nDays += dd;
+
+            //calculation of equivalent english date...
+            total_eDays = def_edd;
+            m = def_emm;
+            y = def_eyy;
+            while (total_nDays != 0) {
+                if (IsLeapYear(y)) {
+                    a = lmonth[m];
+                } else {
+                    a = month[m];
+                }
+                total_eDays++;
+                day++;
+                if (total_eDays > a) {
+                    m++;
+                    total_eDays = 1;
+                    if (m > 12) {
+                        y++;
+                        m = 1;
+                    }
+                }
+                if (day > 7)
+                    day = 1;
+                total_nDays--;
+            }
+            numDay = day;
+
+            NepDate date = new NepDate();
+            date.Year = y;
+            date.Month = m;
+            date.Day = total_eDays;
+            date.WeekDay = day;
+
+            return date;
+
+        }
+    }
+
+    private static boolean IsRangeNep(int yy, int mm, int dd) {
+        if (!IsYearRangeNep(yy)) {
+            return false;
+        }
+        if (mm < 1 || mm > 12) {
+            Log.w("Invalid value", "Error! value 1-12 only");
+            return false;
+        }
+
+        if (dd < 1 || dd > 32) {
+            Log.w("Invaid value", "Error! value 1-31 only");
+            return false;
+        }
+        return true;
+    }
+
+    static boolean IsYearRangeNep(int yy) {
+        if (yy < 2000 || yy > 2089) {
+            Log.w("Out of range date", "Supported only between 2000-2089");
+            return false;
+        }
+        return true;
+    }
+
     String GetNepaliMonth(int m) {
         return months.get(m);
     }
