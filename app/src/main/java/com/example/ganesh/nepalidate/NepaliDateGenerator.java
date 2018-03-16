@@ -5,7 +5,7 @@ import android.util.Log;
 import java.util.HashMap;
 
 /**
- * Created by ganesh on 3/14/2018.
+ * Created by ganesh shrestha on 3/14/2018.
  */
 
 public class NepaliDateGenerator {
