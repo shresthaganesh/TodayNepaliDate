@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
 
                     //Eng to Nep
                     title = String.format("Converting '%s'A.D to Nepali(B.S)", preDate);
-                    postDate = Utils.GetNepaliDate(yearval, monthval, dayval);
+                    postDate = Utils.GetNepaliDate(yearval, monthval + 1, dayval);
                     message = postDate;
                 } else
 
