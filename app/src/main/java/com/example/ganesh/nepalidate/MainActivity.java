@@ -1,9 +1,26 @@
 package com.example.ganesh.nepalidate;
 
+
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.RemoteInput;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,10 +35,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    int todaysNepday = 1;
+    String Notification_Key = "MY_NOTIFICATION_KEY";
     ArrayAdapter<CharSequence> adapter;
     int colorIndex = 0;
     int conversionIndex = 0;
@@ -82,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        todaysNepday = Utils.getTodaysNepaliDay();
         colorsList = findViewById(R.id.colorslist);
         colorsList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -214,10 +233,35 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
-        //Toast.makeText(MainActivity.this, Utils.getTextViewString(), Toast.LENGTH_LONG).show();
 
         //UpdateMonths();
+
+        AssignRepeatAction();
+        ShowNotification();
+        //UpdateIcon();
     }
+
+
+    void AssignRepeatAction() {
+
+//        //An example of broadcast
+//        Intent intent = new Intent();
+//        intent.setFlags(Utils.getTodaysNepaliDay());
+//        intent.setAction("com.example.ganesh.nepalidate.DayNotification");
+//        intent.putExtra("data", "Notice me senpai!");
+//        sendBroadcast(intent);
+
+        long repeatTime = 1 * 5 * 1000;
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.HOUR_OF_DAY, 15);
+        calendar.set(Calendar.MINUTE, 39);
+        Intent intent = new Intent(getApplicationContext(), DayNotification.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), Utils.NotificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), repeatTime, pendingIntent);
+    }
+
 
     void UpdateSettingAndUpdateWidget() {
         int selectedcolor = availableColors[colorIndex];
@@ -258,6 +302,134 @@ public class MainActivity extends AppCompatActivity {
         monthsname.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
+
+
+    void ShowNotification() {
+
+        int graphicID = Utils.allMonthsDays.get(Utils.getTodaysNepaliDay() - 1).getResource();
+        NotificationCompat.Builder notificationBuilder = Utils.getNotification(AdditionalFeatures.class, graphicID, this);
+
+        NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+        manager.notify(Utils.NotificationID, notificationBuilder.build());
+
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            // Create the NotificationChannel, but only on API 26+ because
+//            // the NotificationChannel class is new and not in the support library
+//            CharSequence name = getString(R.string.channel_name);
+//            String description = getString(R.string.channel_description);
+//            int importance = NotificationManagerCompat.IMPORTANCE_DEFAULT;
+//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+//            channel.setDescription(description);
+//            // Register the channel with the system
+//            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+
+    }
+
+    void UpdateIcon() {
+        Bitmap icon = GetBitmap(String.valueOf(todaysDate));
+
+        Intent myLauncherIntent = new Intent(Intent.ACTION_MAIN);
+        myLauncherIntent.setClassName(this, this.getClass().getName());
+        myLauncherIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+        Intent intent = new Intent();
+        intent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, myLauncherIntent);
+        intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Application Name");
+        intent.putExtra
+                (
+                        Intent.EXTRA_SHORTCUT_ICON_RESOURCE,
+                        Intent.ShortcutIconResource.fromContext
+                                (
+                                        getApplicationContext(),
+                                        R.drawable.a1
+                                )
+                );
+        intent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+        getApplicationContext().sendBroadcast(intent);
+    }
+
+    Bitmap GetBitmap(String text) {
+
+        Bitmap bitmap;
+        String myText = text;
+        Paint paint = new Paint();
+        paint.setTextSize(5);
+        paint.setColor(Color.GREEN);
+        paint.setTextAlign(Paint.Align.LEFT);
+        paint.setSubpixelText(true);
+        paint.setAntiAlias(true);
+        float baseline = -paint.ascent();
+        int width = (int) (paint.measureText(myText) + 0.5f);
+        int height = (int) (baseline + paint.descent() + 0.5f);
+
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawText(myText, 0, baseline, paint);
+        //Drawable drawable = new BitmapDrawable(getResources(), bitmap);
+
+        return bitmap;
+    }
+
+    void NotificationWithInstantReply() {
+
+
+//        //Bring the numnber entered in the remote view
+//        Intent intent = new Intent(Intent.ACTION_DIAL);
+//        intent.setData(Uri.parse("tel:0123456789"));
+//        // Key for the string that's delivered in the action's intent.
+//        final String KEY_TEXT_REPLY = "key_text_reply";
+//
+//        String replyLabel = "Instant Reply.";// getResources().getString(R.string.reply_label);
+//        RemoteInput remoteInput = new RemoteInput.Builder(KEY_TEXT_REPLY)
+//                .setLabel(replyLabel)
+//                .build();
+//
+//        // Build a PendingIntent for the reply action to trigger.
+//        PendingIntent replyPendingIntent =
+//                PendingIntent.getBroadcast(getApplicationContext(),
+//                        221,
+//                        intent,
+//                        PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//        // Create the reply action and add the remote input.
+//        NotificationCompat.Action action =
+//                new NotificationCompat.Action.Builder(R.drawable.snooze,
+//                        "MyNotification", replyPendingIntent)
+//                        .addRemoteInput(remoteInput)
+//                        .build();
+//
+//        // Build the notification and add the action.
+//        Notification newMessageNotification = new Notification.Builder(this, Notification_Key)
+//                .setSmallIcon(R.drawable.snooze)
+//                .setContentTitle("My own notification")
+//                .setContentText("Description of my notification.")
+//                //.addAction(action)
+//                .build();
+//
+//// Issue the notification.
+//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+//        notificationManager.notify(569, newMessageNotification);
+    }
+
+
+}
+
+class MyColorMapping {
+    public String Name;
+    public int ID;
+
+    public MyColorMapping() {
+    }
+
+    @Override
+    public String toString() {
+        return Name;
+    }
+}
+
 
 //    MyColorMapping[] colors = new MyColorMapping[12];
 //
@@ -310,19 +482,3 @@ public class MainActivity extends AppCompatActivity {
 //        mapping.Name = "TRANSPARENT";
 //        mapping.ID = Color.TRANSPARENT;
 //    }
-
-
-}
-
-class MyColorMapping {
-    public String Name;
-    public int ID;
-
-    public MyColorMapping() {
-    }
-
-    @Override
-    public String toString() {
-        return Name;
-    }
-}

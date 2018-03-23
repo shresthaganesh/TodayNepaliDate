@@ -190,8 +190,7 @@
                     android:id="@+id/Monthsname"
                     android:layout_width="82dp"
                     android:layout_height="wrap_content"
-                    android:entries="@array/englishmonthlist"
-                    android:foreground="@android:color/background_dark"></Spinner>
+                    android:entries="@array/englishmonthlist"></Spinner>
 
                 <TextView
                     android:layout_width="wrap_content"
