@@ -253,6 +253,12 @@
                 android:textColor="@android:color/background_dark"
                 android:textColorLink="@android:color/black"
                 android:textStyle="italic|bold" />
+
+            <Button
+                android:id="@+id/cancelevent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Cancel Event" />
         </LinearLayout>
 
     </ScrollView>

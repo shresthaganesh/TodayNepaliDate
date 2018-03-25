@@ -39,6 +39,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    Button cancelButton;
     int todaysNepday = 1;
     String Notification_Key = "MY_NOTIFICATION_KEY";
     ArrayAdapter<CharSequence> adapter;
@@ -101,6 +102,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        cancelButton = findViewById(R.id.cancelevent);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), DayNotification.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), Utils.NotificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+                alarmManager.cancel(pendingIntent);
+                Toast.makeText(MainActivity.this, "Cancle button clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         todaysNepday = Utils.getTodaysNepaliDay();
         colorsList = findViewById(R.id.colorslist);
         colorsList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -254,8 +269,8 @@ public class MainActivity extends AppCompatActivity {
         long repeatTime = 1 * 5 * 1000;
         Calendar calendar = Calendar.getInstance();
 
-        calendar.set(Calendar.HOUR_OF_DAY, 15);
-        calendar.set(Calendar.MINUTE, 39);
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 18);
         Intent intent = new Intent(getApplicationContext(), DayNotification.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), Utils.NotificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
