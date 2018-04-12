@@ -4,9 +4,11 @@ package com.example.ganesh.nepalidate;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -266,15 +268,16 @@ public class MainActivity extends AppCompatActivity {
 //        intent.putExtra("data", "Notice me senpai!");
 //        sendBroadcast(intent);
 
-        long repeatTime = 1 * 5 * 1000;
+        long repeatTime = 1 * Utils.timerValue * 1000;
         Calendar calendar = Calendar.getInstance();
 
-        calendar.set(Calendar.HOUR_OF_DAY, 12);
-        calendar.set(Calendar.MINUTE, 18);
+        calendar.set(Calendar.HOUR_OF_DAY, calendar.getTime().getHours());
+        calendar.set(Calendar.MINUTE, calendar.getTime().getMinutes() + 1);
         Intent intent = new Intent(getApplicationContext(), DayNotification.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), Utils.NotificationID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), repeatTime, pendingIntent);
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), repeatTime, pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), repeatTime, pendingIntent);
     }
 
 
@@ -325,22 +328,30 @@ public class MainActivity extends AppCompatActivity {
         NotificationCompat.Builder notificationBuilder = Utils.getNotification(AdditionalFeatures.class, graphicID, this);
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(this);
-        manager.notify(Utils.NotificationID, notificationBuilder.build());
 
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            // Create the NotificationChannel, but only on API 26+ because
-//            // the NotificationChannel class is new and not in the support library
-//            CharSequence name = getString(R.string.channel_name);
-//            String description = getString(R.string.channel_description);
-//            int importance = NotificationManagerCompat.IMPORTANCE_DEFAULT;
-//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-//            channel.setDescription(description);
-//            // Register the channel with the system
-//            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-//            notificationManager.createNotificationChannel(channel);
-//        }
+        //Intent that will be shown when notification is touched
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
 
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
+            int notificationId = 1;
+            String channelId = "channel-01";
+            String channelName = "Channel Name";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                NotificationChannel mChannel = new NotificationChannel(
+                        channelId, channelName, importance);
+                notificationManager.createNotificationChannel(mChannel);
+            }
+
+            NotificationCompat.Builder mBuilder = Utils.getNotificationOreo(AdditionalFeatures.class, graphicID, this);
+
+            notificationManager.notify(notificationId, mBuilder.build());
+        } else {
+
+            manager.notify(Utils.NotificationID, notificationBuilder.build());
+        }
     }
 
     void UpdateIcon() {

@@ -17,7 +17,7 @@ public class DayNotification extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int graphicID = Utils.allMonthsDays.get(Utils.getTodaysNepaliDay() - 1).getResource();
-        NotificationCompat.Builder notificationBuilder = Utils.getNotification(AdditionalFeatures.class, graphicID, context);
+        NotificationCompat.Builder notificationBuilder = Utils.getNotificationOreo(AdditionalFeatures.class, graphicID, context);
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         manager.notify(Utils.NotificationID, notificationBuilder.build());

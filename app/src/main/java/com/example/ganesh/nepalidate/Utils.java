@@ -1,6 +1,8 @@
 package com.example.ganesh.nepalidate;
 
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +21,7 @@ import java.util.Map;
  */
 
 public class Utils {
+    public static int timerValue = 5;
     public static int NotificationID = 7411;
     public static int TodaysNepaliDay = 1;
     static String returnValue = "आजको नेपाली डेट";
@@ -110,7 +113,7 @@ public class Utils {
             add(new NumericMapping(18, "१८", R.drawable.a18));
             add(new NumericMapping(19, "१९", R.drawable.a19));
             add(new NumericMapping(20, "२०", R.drawable.a20));
-            add(new NumericMapping(21, "२१", R.drawable.aa21));
+            add(new NumericMapping(21, "२१", R.drawable.a21));
             add(new NumericMapping(22, "२२", R.drawable.a22));
             add(new NumericMapping(23, "२३", R.drawable.a23));
             add(new NumericMapping(24, "२४", R.drawable.a24));
@@ -143,6 +146,23 @@ public class Utils {
                 .setContentIntent(pendingIntent);
 
         return mbuilder;
+    }
+    public static NotificationCompat.Builder getNotificationOreo(Class intentType, int iconid, Context context) {
+
+        Intent additionalFeatures = new Intent(context, intentType);
+        additionalFeatures.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, Utils.NotificationID, additionalFeatures, PendingIntent.FLAG_UPDATE_CURRENT);
+        int notificationId = 1;
+        String channelId = "channel-01";
+        String channelName = "Channel Name";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(iconid)
+                .setContentTitle("Todays Nepali Date")
+                .setContentText(Utils.getTextViewString())
+                .setContentIntent(pendingIntent);
+
+        return mBuilder;
     }
 
     public static String getTextViewString() {
